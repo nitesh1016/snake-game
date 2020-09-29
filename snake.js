@@ -1,40 +1,55 @@
+function init() {
+    bgcanvas = document.getElementById('mycanvas');
+    w = h = bgcanvas.height = bgcanvas.width = 1000;
+    pen = bgcanvas.getContext('2d');
+    cs = 66;  //cell size
+    
+    snake = {
+        init_len : 5,
+        color : "red",
+        cells :[],
+        direction : "right",
 
-function init(){    
-    p = document.getElementById("hcanvas");
-    H= p.height=500;
-    W=p.width=500;
-    pen=p.getContext('2d');
-    pen.fillStyle="red";
-    snake={  
-        init_len:5,
-        color:"blue",
-        cells:[],
-    }
+        createSnake : function(){
+            for(var i = this.init_len;i>0;i--){
+                this.cells.push({x:i,y:0});
+            }
+        },
+        drawSnake: function () {
+            for(var i=0;i<this.cells.length;i++){
+                pen.fillStyle = this.color;
+                pen.fillRect(this.cells[i].x * cs, this.cells[i].y * cs,cs-2, cs-2);
+            }
+           
+        },
+        updateSnake : function(){
+            console.log("updating snake");
+            this.cells.pop();
+        var headX = this.cells[0].x;
+        var headY = this.cells[0].y;
+
+        var X = headX +1;
+        var Y = headY;
+        this.cells.unshift({x:X,y:Y});
+        }
+  
+    };
+    snake.createSnake();
 }
-
 function draw(){
- pen.clearRect(0,0,W,H);
-pen.fillRect(rect.x,rect.y,rect.w,rect.h);
-
+    //erase the old frame
+   pen.clearRect(0,0,w,h); 
+    snake.drawSnake();
 }
-
 function update(){
-    rect.x+=rect.speed;
-    if(rect.x > W-rect.w || rect.x<0){
-        rect.speed*=-1;
-    }
-}
 
+    snake.updateSnake();
+    
+}
 function gameloop(){
-    console.log("in gameloop");
     draw();
-    update();   
+    update();
 }
-      
+  
 init();
-// b=setInterval(gameloop,100);
-
-
-
-
-
+var f = setInterval(gameloop,100);
